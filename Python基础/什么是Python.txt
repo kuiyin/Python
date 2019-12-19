@@ -1,0 +1,16 @@
+1、起源：1989 年由 Guido van Rossum 在某个研究项目中创建。
+2、特点：高级、面向对象、可升级、可扩展、可移植性、易学、易学、易读、易维护、健壮性、高效的快速原型开发工具、内存管理、解释性和（字节）编译性
+3、实现版本：Cpython，Jython，IronPython，stackless
+4、平台：Linux，MacOS X, Win32家族, DOS，游戏控制台（PSP, Sony PS2）， 实时平台（VxWorks, QNX）
+5、运行Python的方式：命令行上的交互式解释器、命令行启动脚本、集成开发环境（
+  自带：
+  在 Windows 平台下，IDLE 可以在 Python 编译器通常所在的目录 C:\Python2x 下的子目录 Lib\idlelib 中找到。从 DOS 命令行窗口中启动 IDLE, 请调用 idle.p，你也可以从 Windows 环境中调用 idle.py, 但是会启动一个不必要的 DOS 窗口。取而代之的方法是双击 idle.pyw, 以.pyw 作为扩展名的文件不会通过打开 DOS 命令行窗口来运行脚本。事实上你可以在桌面上创建一个到 C:\Python2x\Lib\idlelib\idle.pyw 的 快捷方式，然后双击启动就可以了，简单吧！
+  PythonWin 是 Python 的第一个 Windows 接口，并且还是个带有图形用户界面的集成开发环境。 PythonWin 发行版本中包含 WindowsAPI 和 COM 扩展。PythonWin 本身是针对 MFC 库编写的， 它可以作为开发环境来开发你自己的 Windows 应用程序。你可以从下面给出的网页中下载并安 装它。 PythonWin 通常被安装在和 Python 相同的目录中，在它自己的安装目录 C:\Python2x\Lib\site-packages\pythonwin中有可执行的启动文件pythonwin.exe. PythonWin拥有一个带有颜色显示的编辑器、 一个新的增强版排错器、交互shell 窗口、COM扩展和更多的有用特性。如图14就是运行在 Windows 上 的 PythonWin集成开发环境的屏幕截图。
+）
+6、Python 文档：Python官网、安装目录的 Python35\Doc 目录下的 pythonXx.chm 离线帮助文档
+7、与其他语言比较：
+  ABC、Modula-3、C、C++、Algol-68、SmalTalk、Unix shell
+  Perl、Java、Tcl、Ruby、PHP
+  List、Scheme
+  JavaScript
+  

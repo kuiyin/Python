@@ -1,0 +1,280 @@
+# From setext-list Sun Mar 15 16:35:03 1992
+# From:          Keepers of The Setext Flame[tm] <setext-list@random.se>
+# Date:          Sun, 15 Mar 14:55:00 1992 +0100 (CET)
+# Organization:  random design -- any old TTY will do
+# X-Bad-Address: no more mail to <not.bad.se> please
+# Subject:       what makes a setext (sermon #1)
+
+
+   ermons etexts
+   rmonse textse
+   monset extser
+   onsete xtserm
+   nsetex tsermo
+   setext sermon
+================
+   920315     #1
+
+
+ Hi everybody (or, perhaps, "Hallelujah!" ;-))
+
+   Welcome.  Here's the first installment of the setext mailing list.
+   My intention is to serve a lively mix of format specifications,
+   questions-and-answers and browser implementation trivia ("quick!
+   which of Macintosh word processors was first with a built-in
+   outliner?" ;-)) Please be forgiving of Muddy English[tm], if any;
+   I now run without the benefit of a spelling checker but even if
+   I had one, it would hardly matter, comprehension- or otherwise. 
+
+---Ian
+
+
+ What makes a setext?
+---------------------
+  As mentioned in the concepts document (available from TidBITS
+  fileserver; details on how to obtain it last in any TidBITS issue)
+  the setext format relies on a small number of highly unobtrusive
+  tagging elements to encode the logical structure of source texts
+  intended for wider distribution.  This structure can later be
+  restored at the receiving end, according to rules implemented by
+  each particular front-end's writer.  Thus it is entirely possible
+  to treat the same setext differently depending on behavior of a
+  particular application used for reading it.  Indeed, presence of
+  key typotags in the same setext may in one instance be understood
+  only as flags for change of typefaces and sizes and in another as
+  logic markers signalling that flagged elements be entered into a
+  local database.  This formal decoupling of logical structure from
+  typography during the online-transport stage is part of the beauty
+  of setext. 
+
+  Still, before any decoding can take place a text has first to be
+  verified whether it is a setext and not some arbitrarily-wrapped
+  stream of characters.  Although there are more ways than one to
+  achieve that goal there is one _primary_ test that has to be
+  passed with colors or else the text being tested cannot be a
+  setext.  What ought to be done with thus "rejected" texts will be
+  discussed in an upcoming notice.  This one is all about finding
+  out whether to proceed with parsing at all. 
+
+  Chief among the typotags are two that signal presence of setext
+  titles and subheads inside the text.  A setext document can be
+  formatted more or less properly, may contain or lack any other of
+  its "native" elements but it has to have at least one proper
+  subhead or a title in order to be declared as "a certified
+  setext."
+
+
+Here are a few demo setext subheads:     
+------------------------------------
+
+_ _ _ _ Which Share Just One _ _ _ _
+------------------------------------                           
+
+        ----------> UnifyinG FeaturE
+------------------------------------
+
+of EQUAL RIGHTMOST VISIBLE character 
+------------------------------------
+
+  length as that of its subhead-tt's    
+------------------------------------
+
+[this line is called subhead-string]
+------------------------------------      
+
+[the one below is called subhead-tt]
+------------------------------------
+
+[together they make a valid subhead]
+------------------------------------
+
+   (!) and of course, subheads do not have to be of the same length ;-)
+-----------------------------------------------------------------------
+
+  (nor have to begin in column 1)    
+---------------------------------
+
+ although it is recommended that they stay below 40 characters
+--------------------------------------------------------------
+
+    Second Setext In This File
+==============================   	
+
+ ((end of examples))
+ -------------------
+ ((_not_ a subhead))
+
+
+  Chief among the reasons why one should first look for presence of
+  subheads rather than titles is that it is fully conceivable that a
+  setext might have been created without an explicit title-tt in
+  order to allow decoder programs to distinguish between part one
+  and any subsequent ones in a possible multi-part mailing. This
+  absence of a title-tt could be enough of a signal to start looking
+  for possible "part x of y" message in either the subject line,
+  filename or anywhere "above" the first detected subhead of the
+  current text. 
+
+  Therefore, here's a formal definition of what makes a setext:
+
+ +-------------------------------------------------------------+
+ |  a text that contains at least one verified setext subhead  |
+ |  or setext title                                            |
+ +-------------------------------------------------------------+
+
+
+ RIGHTMOST VISIBLE char length of subheads and titles    
+-----------------------------------------------------
+  What, pray, is meant by that? It is a very important point: a
+  properly-formatted setext subhead is made up of a subhead-string,
+  (less than 80, preferably no more than 40 characters long for
+  ease of implementation reasons), followed by a line consisting of
+  an equal number of dash characters, (ASCII 45/ hex 2d) counted
+  from column 1 to the RIGHMOST VISIBLE subhead-string column, incl.
+  possible leading white space.  For instance, the subhead above is
+  made up of a subhead-string with a total length of 56 characters,
+  of which 1 is a leading and 4 are trailing ("invisible") blanks.
+  Rightmost visible length of both the subhead-string and its
+  all-dash-typotag line is 52 characters however.  This is what
+  makes that pair of lines into a verified setext subhead. 
+
+  Indeed, this positive-vetting mechanism is the basis on which the
+  setext format rests...  all-dash or all-equal-sign lines doing the
+  double duty of being both machine-recognizable flags for detection
+  of subheads or titles AND visual underline elements in their own
+  right.  Trailing blanks and tabs are simply a nuisance which has
+  to be taken into the account.  They may have been appeared there
+  inadvertedly or as a result of either line having been pasted in
+  from another source and survived the encoding process.  Automatic
+  setext-assembly routines will create 100%-clean subheads but since
+  setexts are so easy to code wholly by hand the possibility of
+  subheads with in reality invisible trailing tabs or spaces cannot
+  be discounted entirely (as is the case with several among the
+  demo subheads above).  Therefore the only proper way to validate
+  a subhead (or a title) is to do it in like fashion:
+
+
+(a) scan forward for a line that's made up of at least 2 leading
+    dash characters (=minimum length; a practical consideration)
+    with possible trailing white space (spaces, tabs and other
+    defacto invisible [control] characters). If applicable, grep
+    all such lines globally using the pattern "^--[-]*[\s\t]*$"
+
+(b) if no lines found, repeat the search for title-typotags ("=").
+
+(c) if no lines found then the text is not a setext. Display it
+    using the default behavior. End of verification process.
+
+(d) if either (a) or (b) returns one or more lines, then each of
+    these will have to be checked for being part of a setext
+    subhead or title. 
+
+(f) if first returned line is equal to the first physical line in
+    the buffer or file then proceed with the next instance. First
+    possible line number on which a typotag could be present is 2.
+    As long as the list is not empty repeat for each line in the
+    returned list:
+
+(g) calculate which line it is, counting from the chosen index (like 
+    the beginning of file or the text buffer).  Assign this value to
+    a variable "ttPtr."
+
+(h) strip (a copy of) line ttPtr of the text of any _trailing_ tabs,
+    spaces and possible other invisible characters
+
+(i) extract the character length (count the number of dash chars);
+    store it in a local variable "ttLength"
+
+(j) strip (a copy of) line ttPtr-1 of the text of any _trailing_ 
+    tabs, spaces and possible other invisible characters; store the
+    trailing-blankless result in a local variable "sString"
+
+(k) extract the number of characters in sString (incl possible
+    _leading_ indent); store it in a local variable "sLength"
+
+(l) compare ttLength to sLength; if they match then declare line
+    ttPtr-1 to be a subhead; output sString to display (with chosen
+    typographical enhancements if needed; line ttPtr itself doesn't
+    have to be displayed of course).
+
+(m) start the next parsing loop
+
+
+ an example in HyperTalk
+------------------------
+  Though the above appears complicated in reality it is a sequence
+  of very simple, straightforward operations.  Here is how it may be
+  implemented in HyperTalk using just one recursive grep() XFCN call
+  (v 3.1 by Greg Anderson):
+
+ get greptts("-") ---result is EITHER a verified list of subheads or
+ --------------------titles OR empty --> the text cannot be a setext 
+ ----a second greptts("=") call is required for detection of titles!
+ ----text being verified is assumed to have been read into a global;
+ ----it takes 6-8 seconds on an SE to verify a sample 44KB file made
+ ----up of 2 titles + 12 subheads incl. a few confusing non-subheads
+
+ function greptts ttchar ------------ttchar may be either "-" or "="
+   global myText
+   get "^" &ttchar &ttchar --first grep pattern is 2 leading ttchars
+   put "[" &char offset(ttchar,"-=") of "=-" &quote ~~ --second pass
+   &"!-,\./;<>-~]" into pattern -----is required to account for this
+   get grep(v,pattern,grep(n,it,myText)) ---grep XFCN implementation
+   if it<>empty then return topicList(it,ttchar="=") else return ""
+ end greptts --else: no RAW title/ subhead-typotags were encountered
+
+ function topicList ttList,titleflag --controls type of verification
+   global myText
+   if char 1 to offset(":",ttList)-1 of ttList =1
+   then delete line 1 of ttList
+   put empty into verifiedList -----------initialize return variable
+   if ttList<>empty then
+     repeat with i=1 to number of lines in ttList
+       get line i of ttList
+       put (char 1 to offset(":",it)-1 of it)-1 into ttptr
+       get length(word 2 of it) ----------------------------ttLength
+       put blankLess(line ttptr of myText) into sString
+       if length(sString)=it then
+         put ttptr &"," after verifiedList
+         if param(2) then get return else get pure(sString) &return
+         put it after verifiedList
+       end if
+     end repeat
+   end if
+   return verifiedList
+ end topicList
+
+ function blankLess aStr ----string stripped of trailing white space
+   get space &numtochar(9) ---------------assign a space-tab pattern
+   repeat with i=length(aStr) down to 1 -----to  local variable "it"
+     if char i of aStr is not in it then return char 1 to i of aStr
+   end repeat
+   return empty
+ end blankLess
+
+ function pure aStr --string stripped of leading and trailing blanks
+   return word 1 to 99999 of aStr -----an arbitrarily large value is
+ end pure -----decoded faster by HyperTalk than "number of words in"
+
+
+ Administrivia update 920907
+----------------------------
+  There are now 61 (up from 35 in March) names on this mailing list,
+  all of you who have expressed interest, future front-end writers
+  or setext authors/ publishers.  I've heard of a few TidBITS
+  browsers having already been written in HyperCard, none of them a
+  proper setext tool, however, but most probably decoders of some of
+  the more easily-recognizable layout elements of it.  I hope that
+  the above example is enough to demonstrate that doing it properly
+  isn't all that more difficult than doing it in a quickie-hack
+  fashion. 
+
+
+ ------------------------------------------> end of setext sermon #1
+ edited <----- Ian Feldman
+ inquiries --> setext-list@random.se
+ ------------> setext, the structure-enhanced text concepts document
+ (last changed Aug 1992; do not reorder if you already have seen it)
+ may be requested by sending "setext" alone on the Subject: line, no
+ quotes, empty message body to -----------> <fileserver@tidbits.com>
+..

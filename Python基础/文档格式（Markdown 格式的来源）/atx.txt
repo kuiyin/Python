@@ -1,0 +1,75 @@
+atx, the true structured text format
+I鈥檓 sick of bringing my writing down to the level of the computer. Why should I have to cover everything in annoying pointy brackets just so it knows what I mean? We鈥檝e had well-standardized conventions for computer processed text for the past decade; it鈥檚 time for a text format that acknowledges them, instead of inventing its own way of doing things.
+
+I鈥檝e tried to create such a format: atx. The rest of this document describes the conventions of atx in detail, but you should be able to just write as you do in email and have a mostly valid atx document.
+
+Note that atx is still in flux and is subject to change. However, I don鈥檛 expect all that much to change and I鈥檒l note things that I鈥檓 not sure about in the document.
+
+Body Text
+Use the TeX encoding of formatting characters:
+
+Double quoting: ``Hello, World!''
+Single quoting: `Hello, World!'
+An en-dash: 1920---1942
+An em-dash: Some thought -- sidenote -- same thought.
+Double quoting: 鈥淗ello, World!鈥�
+Single quoting: 鈥楬ello, World!鈥�
+An en-dash: 1920鈥�1942
+An em-dash: Some thought 鈥� sidenote 鈥� same thought.
+
+(Yes, the last two are reversed from their positions in TeX. I think this is fair because a en-dash is far less common than an em-dash in my experience, but I鈥檇 appreciate feedback.)
+
+Use format=flowed wrapping: if the line ends in a space, then the next line is treated as a continuation of the previous one. Otherwise there鈥檚 a line break.
+
+Use the standard email conventions for strong and emphasis, and a new one for computer words (since I don鈥檛 think there exists a convention):
+
+Emphasis (italics): I _love_ candy!
+Strong (bold): *This is a draft!*
+Code (monospaced): Use the |frobnitz| module.
+Emphasis (italics): I love candy!
+Strong (bold): This is a draft!
+Code (monospaced): Use the frobnitz module.
+
+Paragraphs are separated by a blank line. Lines starting with $ or folowing a paragraph ending in :: are preformatted.
+
+Headings
+Headings start with 1 or more # characters. The level 1 heading (the title) starts with #, section headings with ##, subheads with ###, and so on.
+
+Lists
+Ordered lists start with numbers:
+
+1. Jack
+2. Jill
+3. Bill
+Jack
+Jill
+Bill
+Unordered lists start with *:
+
+* Eat
+* Drink
+* Sleep
+Eat
+Drink
+Sleep
+Block Quotes
+Block quotes start with 3 or more spaces:
+
+    Four score and seven years ago our fathers brought forth on this 
+    continent, a new nation, conceived in Liberty, and dedicated to the 
+    proposition that all men are created equal.
+Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the
+proposition that all men are created equal.
+Links
+I need to figure out some way of doing links. (A similar method could be used to do any other type of phrase-describing not included.) I was thinking something like:
+
+[John] went to [the market].
+ 
+[John] http://www.john.org/
+[the market] http://themarket.gov/
+John went to the market.
+
+What do you think?
+
+That鈥檚 it!
+Is there anything else I should include? Let me know.
